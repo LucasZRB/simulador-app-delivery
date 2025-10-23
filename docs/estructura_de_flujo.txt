@@ -1,0 +1,163 @@
+### 🏠 Pantalla principal
+```markdown
+===========================
+     BIENVENIDO A ComiGO
+===========================
+1. Registrarse / Iniciar sesión
+2. Ver categorías de comida
+3. Configurar filtros de búsqueda
+4. Ver carrito
+5. Historial de compras
+6. Salir
+```
+Dependiendo de si el usuario ya está registrado o no, la opción 2 (y siguientes) podrían estar **bloqueadas temporalmente** hasta que complete el registro inicial.
+
+---
+
+### 👤 Pantalla de registro / inicio de sesión
+**Datos solicitados:**
+* Nombre completo
+* Dirección (texto libre, podría incluir calle, número y ciudad)
+* Teléfono / Celular
+* Correo electrónico
+* Documento (DNI o similar, para verificar edad)
+
+**Validaciones comunes (que deben existir tanto en consola como en Lazarus GUI):**
+* Ningún campo vacío
+* Teléfono: solo números, longitud válida
+* Correo: contiene “@” y dominio
+* Documento: solo números
+* Edad ≥ 18 años (a partir del documento o ingresando fecha de nacimiento)
+
+**Opciones en pantalla:**
+```yaml
+== REGISTRO DE USUARIO ==
+Ingrese su nombre completo: _
+Ingrese su dirección: _
+Ingrese su teléfono: _
+Ingrese su correo electrónico: _
+Ingrese su documento: _
+[1] Guardar y continuar   [2] Cancelar y volver
+```
+
+---
+
+### 🍕 Pantalla de selección de categoría
+```yaml
+== CATEGORÍAS DE COMIDA ==
+1. Pizzas
+2. Hamburguesas
+3. Helados
+4. Comida China
+5. Bebidas
+6. Volver
+```
+
+---
+
+### 🏪 Pantalla de negocios disponibles
+```mk
+== PIZZAS DISPONIBLES ==
+(3 negocios abiertos)
+
+1. Pizzería Napoli      ★★★★★  (0.8 km)  Cierra: 23:30
+2. PizzaRápida          ★★★★☆  (1.2 km)  Cierra: 00:00
+3. Don Muzzarella       ★★★☆☆  (2.1 km)  Cierra: 22:45
+-------------------------------
+[F] Filtros  [V] Volver
+```
+**Orden inicial:** por distancia → puntuación
+
+**Filtros disponibles:**
+* Por distancia máxima
+* Por puntuación mínima
+* Por horario
+* Por tipo de comida específica
+
+---
+
+### 🍽️ Catálogo del negocio seleccionado
+```csharp
+== PIZZERÍA NAPOLI ==
+1. Muzzarella      $8.50   (Tomate, Queso)
+2. Napolitana      $9.20   (Tomate, Queso, Jamón)
+3. Cuatro Quesos   $9.80   (Variedad de quesos)
+-------------------------------
+[S] Seleccionar producto  [V] Volver
+```
+---
+
+### 🛒 Pantalla de producto
+```csharp
+== DETALLE DE PRODUCTO ==
+Nombre: Muzzarella
+Precio: $8.50
+Ingredientes: Tomate, Queso
+
+Ingrese cantidad: _
+[1] Agregar al carrito
+[2] Volver
+```
+
+---
+
+### 🛍️ Carrito de compras
+```csharp
+== CARRITO ==
+1. Muzzarella (x2)      $17.00
+2. Napolitana (x1)       $9.20
+-------------------------------
+Total: $26.20
+
+[1] Modificar cantidad
+[2] Eliminar producto
+[3] Continuar con la compra
+[4] Volver
+```
+
+---
+
+### 💳 Pago
+```csharp
+== MÉTODO DE PAGO ==
+Ingrese número de tarjeta: _
+Ingrese nombre del titular: _
+Fecha de expiración (MM/AA): _
+Código de seguridad (CVV): _
+Tipo de tarjeta: [1] Crédito [2] Débito
+-------------------------------
+[1] Confirmar pago  [2] Cancelar
+```
+**Validaciones:**
+* Números válidos (solo dígitos, longitud correcta)
+* Fecha no vencida
+* CVV de 3 dígitos
+* Campos no vacíos
+
+---
+
+### 🚴 Seguimiento del pedido
+```csharp
+== SEGUIMIENTO ==
+Pedido confirmado.
+Estado actual: En preparación.
+Tiempo estimado de entrega: 35 min
+
+Progreso:
+[####------] 45%
+
+[1] Actualizar estado
+[2] Volver al menú principal
+```
+
+---
+
+### 📜 Historial de compras
+```swift
+== HISTORIAL DE PEDIDOS ==
+1. Pizzería Napoli - 12/10/2025 - $26.20  ✅ Entregado
+2. IceCreamShop   - 05/10/2025 - $12.00  ✅ Entregado
+3. BurgerZone     - 28/09/2025 - $18.50  ❌ Cancelado
+-------------------------------
+[1] Ver detalles  [2] Volver
+```
