@@ -6,9 +6,8 @@ Cuando **no está registrado:**
 ===========================
 1. Iniciar sesión
 2. Ver categorías de comida
-3. Configurar filtros de búsqueda
-4. Ver carrito
-5. Salir
+3. Ver carrito
+4. Salir
 ```
 Cuando **ya ha iniciado sesión:**
 ```markdown
@@ -27,14 +26,16 @@ Cuando **ya ha iniciado sesión:**
 
 ### 👤 Pantalla de registro / inicio de sesión
 **Datos solicitados:**
-* Nombre completo
-* Dirección (texto libre, podría incluir calle, número y ciudad)
+* Nombre
+* Apellido
+* Dirección (Calle, Número, Piso y Departamento)
 * Teléfono / Celular
 * Correo electrónico
-* Documento (DNI o similar, para verificar edad)
+* Documento (DNI, para verificar edad)
 
 **Validaciones comunes (que deben existir tanto en consola como en Lazarus GUI):**
-* Ningún campo vacío
+* Ningún campo vacío (A excepción del Piso y Departamento)
+* Número de Dirección: solo números
 * Teléfono: solo números, longitud válida
 * Correo: contiene “@” y dominio
 * Documento: solo números
@@ -43,8 +44,13 @@ Cuando **ya ha iniciado sesión:**
 **Opciones en pantalla:**
 ```yaml
 == REGISTRO DE USUARIO ==
-Ingrese su nombre completo: _
-Ingrese su dirección: _
+Ingrese su nombre: _
+Ingrese su apellido: _
+Ingrese su dirección:
+* Calle: _
+* Número: _
+* Piso: _
+* Dpto: _
 Ingrese su teléfono: _
 Ingrese su correo electrónico: _
 Ingrese su documento: _
@@ -71,27 +77,29 @@ Ingrese su documento: _
 == PIZZAS DISPONIBLES ==
 (3 negocios abiertos)
 
-1. Pizzería Napoli      ★★★★★  (0.8 km)  Cierra: 23:30
-2. PizzaRápida          ★★★★☆  (1.2 km)  Cierra: 00:00
-3. Don Muzzarella       ★★★☆☆  (2.1 km)  Cierra: 22:45
+1. Pizzería Napoli      ★★★★★  (0.8 km)  Cierra: 23:30   Tiempo estimado: 35 min   Envío: $1.50
+2. PizzaRápida          ★★★★☆  (1.2 km)  Cierra: 00:00   Tiempo estimado: 25 min   Envío: $1.50
+3. Don Muzzarella       ★★★☆☆  (2.1 km)  Cierra: 22:45   Tiempo estimado: 30 min   Envío: $1.50
 -------------------------------
 [F] Filtros  [V] Volver
 ```
 **Orden inicial:** por distancia → puntuación
 
+**Otros ordenes:** por horario de cierre, tiempo estimado
+
 ---
 
-### 📍 “Configurar filtros de búsqueda” (menú principal)
-Define preferencias globales del usuario, que afectan todas las búsquedas posteriores.
+### 📍 “Configurar filtros de búsqueda” del menú principal
+Define **preferencias globales** del usuario, que afectan todas las búsquedas posteriores.
 ```mk
 == CONFIGURAR FILTROS ==
 [Distancia máxima]: 5 km
 [Puntuación mínima]: ★★★★☆
 [Tiempo estimado máx]: 45 min
-[Orden predeterminado]: Distancia → Puntuación → Horario de cierre
-[Guardar]  [Cancelar]  [Restablecer]
+[Orden predeterminado]: Distancia → Puntuación
+[G] Guardar  [C] Cancelar  [R] Restablecer
 ```
-Estos filtros se guardan como preferencias persistentes (incluso entre sesiones).
+Estos filtros se guardan como **preferencias persistentes** (incluso entre sesiones).
 
 ### 📍 “Filtros” en pantalla de negocios disponibles
 Muestra los filtros activos, permite ajustarlos temporalmente.
@@ -110,9 +118,12 @@ Comida: Pizza
 ### 🍽️ Catálogo del negocio seleccionado
 ```csharp
 == PIZZERÍA NAPOLI ==
-1. Muzzarella      $8.50   (Tomate, Queso)         Tiempo estimado: 30 min
-2. Napolitana      $9.20   (Tomate, Queso, Jamón)  Tiempo estimado: 35 min
-3. Cuatro Quesos   $9.80   (Variedad de quesos)    Tiempo estimado: 30 min
+Tiempo estimado: 35 min   Envío: $1.50
+                  ★★★★★
+
+1. Muzzarella      $8.50   (Tomate, Queso)
+2. Napolitana      $9.20   (Tomate, Queso, Jamón)
+3. Cuatro Quesos   $9.80   (Variedad de quesos)
 -------------------------------
 [S] Seleccionar producto  [V] Volver
 ```
@@ -125,7 +136,7 @@ Nombre: Muzzarella
 Precio: $8.50
 Costo de envío: $1.50
 Ingredientes: Tomate, Queso
-Tiempo estimado: 30 min
+Tiempo estimado: 35 min
 
 Ingrese cantidad: _
 [1] Agregar al carrito
@@ -135,8 +146,8 @@ Ingrese cantidad: _
 ---
 
 ### 🛍️ Carrito de compras
-El carrito **funciona sin cuenta** hasta que el usuario intenta comprar.
-En ese momento, si no hay sesión, se le muestra:
+* El carrito **funciona sin cuenta** hasta que el usuario intenta comprar.
+* En ese momento, si no hay sesión, se le muestra:
 ```csharp
 == CARRITO ==
 1. Muzzarella (x2)      $17.00
@@ -149,7 +160,7 @@ Para continuar con la compra debe registrarse.
 [2] Cancelar
 [3] Volver
 ```
-Luego del registro, el carrito se asocia a su cuenta automáticamente.
+* Luego del registro, el carrito se asocia a su cuenta automáticamente.
 ```csharp
 == CARRITO ==
 1. Muzzarella (x2)      $17.00
@@ -278,6 +289,7 @@ Esta función puede reutilizar los datos del historial agrupados por producto.
 
 ### 👨‍💻 Pantallas de desarrollador / administrador
 Tendremos un modo administrativo con acceso restringido (login especial).
+
 📋 a) Historial global de compras
 Muestra todos los pedidos realizados, con los mismos filtros del usuario, más:
 * Filtro por **usuario**
@@ -311,7 +323,7 @@ Total recaudado: $284.50
 Promedio por pedido: $18.96
 ----------------------------
 Pedidos del día:
-#0432 - JULIÁN GÓMEZ - $32.20
+#0432 - JULIÁN GÓMEZ  - $32.20
 #0433 - ANA LÓPEZ     - $15.00
 #0434 - PEDRO RUIZ    - $20.50
 ----------------------------
